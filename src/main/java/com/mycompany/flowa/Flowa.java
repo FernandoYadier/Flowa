@@ -1,16 +1,24 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package com.mycompany.flowa;
 
-/**
- *
- * @author ferna
- */
-public class Flowa {
+import com.formdev.flatlaf.FlatLightLaf;
+// u otra variante como FlatDarkLaf, FlatIntelliJLaf, etc.
+import javax.swing.SwingUtilities;
 
+public class Flowa {
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        // Establecer el tema LAF
+        try {
+            FlatLightLaf.setup();
+            // O:
+            // UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (Exception ex) {
+            System.err.println("No se pudo inicializar FlatLaf: " + ex.getMessage());
+        }
+
+        // Luego crear la interfaz gráfica
+        SwingUtilities.invokeLater(() -> {
+            // Aquí inicializas tu ventana principal, etc.
+            // new MainView().setVisible(true);
+        });
     }
 }
