@@ -9,7 +9,7 @@ public class ConexionMySQL {
     // Configuración de conexión
     private static final String URL = "jdbc:mysql://localhost:3307/flowa_bd?serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true";
     private static final String USER = "root";      // cambia si usas otro usuario
-    private static final String PASS = "";          // agrega tu contraseña si tiene
+    private static final String PASS = "root";          // agrega tu contraseña si tiene
 
     public static Connection getConnection() {
         Connection conn = null;

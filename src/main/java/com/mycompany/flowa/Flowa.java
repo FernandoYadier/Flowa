@@ -31,7 +31,7 @@ public class Flowa extends JFrame {
 
     private void cargarDatos() {
         try (Connection conn = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3307/flowa_bd", "root", "");
+                "jdbc:mysql://localhost:3307/flowa_bd", "root", "root");
              Statement stmt = conn.createStatement()) {
 
             String query = """
