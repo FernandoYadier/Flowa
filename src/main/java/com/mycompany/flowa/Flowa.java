@@ -1,66 +1,67 @@
 package com.mycompany.flowa;
 
-import com.formdev.flatlaf.FlatLightLaf;
+import java.sql.*;
 import javax.swing.*;
-import java.awt.*;
+import javax.swing.table.DefaultTableModel;
 
 public class Flowa extends JFrame {
+    private final JTable tabla;
+    private final DefaultTableModel modelo;
 
     public Flowa() {
-        // Configurar ventana
-        setTitle("Ejemplo con FlatLaf");
-        setSize(500, 350);
+        setTitle("Lista de Gastos");
+        setSize(700, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
 
-        // Panel superior con título
-        JLabel titulo = new JLabel("Interfaz con FlatLaf", SwingConstants.CENTER);
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        add(titulo, BorderLayout.NORTH);
+        modelo = new DefaultTableModel();
+        modelo.addColumn("ID");
+        modelo.addColumn("Categoría");
+        modelo.addColumn("Nombre");
+        modelo.addColumn("Cantidad");
+        modelo.addColumn("Monto");
+        modelo.addColumn("Fecha");
+        modelo.addColumn("Nota");
 
-        // Panel central con formulario
-        JPanel panelCentro = new JPanel(new GridLayout(4, 2, 10, 10));
-        panelCentro.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
+        tabla = new JTable(modelo);
+        add(new JScrollPane(tabla));
 
-        panelCentro.add(new JLabel("Nombre:"));
-        JTextField campoNombre = new JTextField();
-        panelCentro.add(campoNombre);
+        cargarDatos();
+    }
 
-        panelCentro.add(new JLabel("Correo:"));
-        JTextField campoCorreo = new JTextField();
-        panelCentro.add(campoCorreo);
+    private void cargarDatos() {
+        try (Connection conn = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3307/flowa_bd", "root", "");
+             Statement stmt = conn.createStatement()) {
 
-        panelCentro.add(new JLabel("Género:"));
-        JComboBox<String> comboGenero = new JComboBox<>(new String[]{"Masculino", "Femenino", "Otro"});
-        panelCentro.add(comboGenero);
+            String query = """
+                SELECT g.id, c.nombre AS categoria, g.nombre, g.cantidad,
+                       g.monto, g.fecha, g.nota
+                FROM gasto g
+                JOIN categoria c ON g.categoria_id = c.id
+            """;
 
-        panelCentro.add(new JLabel("País:"));
-        JComboBox<String> comboPais = new JComboBox<>(new String[]{"México", "Argentina", "Chile", "España"});
-        panelCentro.add(comboPais);
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                modelo.addRow(new Object[]{
+                    rs.getInt("id"),
+                    rs.getString("categoria"),
+                    rs.getString("nombre"),
+                    rs.getBigDecimal("cantidad"),
+                    rs.getBigDecimal("monto"),
+                    rs.getDate("fecha"),
+                    rs.getString("nota")
+                });
+            }
 
-        add(panelCentro, BorderLayout.CENTER);
-
-        // Panel inferior con botones
-        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton btnGuardar = new JButton("Guardar");
-        JButton btnCancelar = new JButton("Cancelar");
-        panelBotones.add(btnGuardar);
-        panelBotones.add(btnCancelar);
-
-        add(panelBotones, BorderLayout.SOUTH);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this,
+                "Error al cargar datos: " + e.getMessage(),
+                "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public static void main(String[] args) {
-        try {
-            // Configurar el tema de FlatLaf
-            FlatLightLaf.setup();
-        } catch (Exception ex) {
-            System.err.println("No se pudo inicializar FlatLaf.");
-        }
-
-        SwingUtilities.invokeLater(() -> {
-            new Flowa().setVisible(true);
-        });
+        SwingUtilities.invokeLater(() -> new Flowa().setVisible(true));
     }
 }
