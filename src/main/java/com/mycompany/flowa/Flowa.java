@@ -15,7 +15,7 @@ public class Flowa extends javax.swing.JFrame {
     }
     
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+                             
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
@@ -78,10 +78,10 @@ public class Flowa extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>                        
+    }                     
 
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {                                                
-        // Confirmar si el usuario realmente quiere cerrar sesión
+       
         int respuesta = JOptionPane.showConfirmDialog(
             this,
             "¿Estás seguro de que deseas cerrar sesión?",
@@ -91,10 +91,8 @@ public class Flowa extends javax.swing.JFrame {
         );
         
         if (respuesta == JOptionPane.YES_OPTION) {
-            // Cerrar la ventana actual
             this.dispose();
             
-            // Abrir la ventana de Login
             java.awt.EventQueue.invokeLater(() -> {
                 Login loginWindow = new Login();
                 loginWindow.setVisible(true);
@@ -111,10 +109,8 @@ public class Flowa extends javax.swing.JFrame {
 
         java.awt.EventQueue.invokeLater(() -> new Flowa().setVisible(true));
     }
-
-    // Variables declaration - do not modify                     
+                   
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
-    // End of variables declaration                   
+    private javax.swing.JPanel jPanel1;                
 }
